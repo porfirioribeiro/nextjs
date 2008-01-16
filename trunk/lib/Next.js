@@ -11,7 +11,7 @@ var Next=function(){};
  * @param {HTMLElement} [parent]
  * @return {HTMLElement}
  */
-Next.getElementById=function(element,parent){
+Next.byId=function(element,parent){
 	if (!parent){
 		parent=document;
 	}
@@ -154,7 +154,7 @@ Next.nlMethods=[];
 /**
  * @alias {Next.getElementsById}
  */
-var $=Next.getElementById;
+var $=Next.byId;
 /**
  * @alias {Next.getElementsBySelector}
  */
