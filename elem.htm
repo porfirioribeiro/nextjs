@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<style type="text/css">
+			body{
+				background-color:green;
+			}
+		</style>
+        <script type="text/javascript">
+window.onerror=function(m,f,l){
+	alert(m+"\n"+f+"\n"+l);
+};        	
+        </script>
+		<script type="text/javascript" src="lib/js.php?debug"></script>		
+	</head>
+	<body>		
+		<div class="foo" id="bar" style="color:blue;background-color:red;border:1px solid black;_width:100px" onmouseover="$(this).opacity.animate({to:0.8,duration:100});" onmouseout="$(this).opacity.animate({to:1,duration:100});" onclick="if (!this._p){this._p=$(this).width.animate({to:100,duration:1000,transition:Next.tx.circInOut});}else{this._p.toggle();}">Put mouse over or click</div>
+		<pre>
+		</pre>
+        <script type="text/javascript">
+HTMLElement.prototype.opacity=function(){
+	if (!this._propOpacity){
+		this._propOpacity=Prop.Number(this,this.getOpacity,this.setOpacity);	
+	}
+	return this._propOpacity;
+};
+
+HTMLElement.prototype.width=function(){
+	if (!this._propWidth){
+		this._propWidth=Prop.Number(this,function(){
+			return this.getWidth();
+		},function(v){
+			return this.setStyle({"width":v+"px"});
+		});	
+	}
+	return this._propWidth;
+};
+
+
+HTMLElement.props.push({
+	name:"marginLeft",
+	getter:function(){
+		var v=this.getStyle("margin-left").toFloat();
+		console.log(v);
+		return v;
+	},
+	setter:function(v){
+		console.log("margin-left:"+v+"px");
+		this.setStyle("margin-left:"+v+"px");
+	}
+},{
+	name:"opacity",
+	getter:HTMLElement.prototype.getOpacity,
+	setter:HTMLElement.prototype.setOpacity
+},{
+	name:"width",
+	getter:function(){
+			return this.getWidth();
+	},
+	setter:function(v){
+			return this.setStyle({"width":v+"px"});
+	}
+});
+
+
+        </script>		
+	</body>
+</html>

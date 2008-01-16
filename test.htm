@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script type="text/javascript">
+			onerror=function(m,f,l){
+				alert(m+"\n"+f+"\n"+l);
+			};
+/**
+ * Class, dummy function
+ */			
+function Class(){}	
+/**
+ * Check if we are calling a constructor or just extending
+ * @param {Object} args
+ */		
+Class.ext=function(args){
+	return (args[0]==Class);
+};	
+/**
+ * Extends a class
+ * @param {Class} klass1
+ * @param {Class} klass2
+ */
+Class.extend=function(klass1,klass2){
+	if (!klass2){
+		klass2=Class;
+	}
+	klass1.prototype=new klass2(Class);
+	klass1.prototype.$super=klass2.prototype;	
+};
+/**
+ * Refer to super object
+ * Must only be used internal!!
+ */
+Class.prototype.$super={};
+
+
+/**
+ * @extends {Class}
+ */			
+function Img(src,load){
+	if (Class.ext(arguments)){return;}	
+	this.im=new Image();
+	this.im.parent=this;
+	this.im.onload=this.onload;
+	this.src=src;
+	if (!!load){
+		this.im.src=this.src;
+	}else{
+		Img.allImgs.push(this);
+	}
+}
+Class.extend(Img);
+Img.allImgs=[];
+Img.imgInd=0;
+Img.reset=function(){
+	Img.allImgs=[];
+	Img.imgInd=0;
+};
+
+Img.load=function(onImageLoad,onLoadFinish){
+	if (!!onImageLoad){
+		Img.onImageLoad=onImageLoad;
+	}
+	if (!!onLoadFinish){
+		Img.onLoadFinish=onLoadFinish;
+	}
+	for (var i=0;i<Img.allImgs.length;i++){
+		var im=Img.allImgs[i];
+		im.im.onload=function(){
+			Img.onImageLoad(this.parent,++Img.imgInd,Img.allImgs.length,((Img.imgInd)/Img.allImgs.length)*100);
+		};
+		im.im.src=im.src;
+	}
+};
+
+Img.onImageLoad=function(){};
+Img.onLoadFinish=function(){};
+
+Img.prototype.onload=function(){};
+
+i=new Img("http://69.93.50.122/desktopgirls/photos/Jessica_Alba_Widescreen_1121200742528PM333.jpg");
+new Img("http://69.93.50.122/desktopgirls/photos/Jessica_Alba_Widescreen_1121200742528PM333.jpg");
+new Img("http://69.93.50.122/desktopgirls/photos/Jessica_Alba_Widescreen_1121200742528PM333.jpg");
+new Img("http://69.93.50.122/desktopgirls/photos/Jessica_Alba_Widescreen_1121200742528PM333.jpg");
+
+
+Img.onImageLoad=function(image,index,n,p){
+	document.getElementById("test").innerHTML="Loading image "+index+" of "+n+"  "+p+"%";
+	document.body.appendChild(image.im);
+	alert(image.im.width);
+};			
+
+Img.load();
+			
+		</script>
+	</head>
+	<body>
+		<div id="test"></div>
+	</body>
+</html>
