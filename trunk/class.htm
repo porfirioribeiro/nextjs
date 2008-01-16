@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+        <title>Untitled Document</title>
+        <script type="text/javascript">
+
+
+/**
+ * Abstract animal class
+ * @param {Object} name
+ */
+function Animal(name){
+    this.name = name;
+}
+Animal.prototype.name = "";
+Animal.prototype.eat = function(){
+    this.say("Yum!");
+};
+Animal.prototype.say = function(message){
+    alert(this.name + ": " + message);
+};
+/**
+ * Cat class
+ * @extends {Animal}
+ */
+function Cat(){
+    Cat.base.constructor.call(this, 'cat');
+}
+Cat.Extends(Animal);
+Cat.prototype.eat = function(food){
+	if (food instanceof BadMouse){
+		this.say("Hmmm... i dont like BadMouse");
+	}else if (food instanceof Mouse) {
+		Cat.base.eat.call(this,food);
+    }else {
+        this.say("Yuk! I only eat mice - not " + food.name);
+    }
+};
+/**
+ * Lion class
+ * @extends {Cat}
+ */
+function Lion(){
+	this.$.construct(Animal,["Lion king"]);
+    //Animal.prototype.constructor.call(this, 'lion');
+}
+Lion.Extends(Cat);
+Lion.prototype.say=function(message){
+	this.$.call("say",message.toUpperCase());
+};
+/**
+ * Mouse class
+ * @extends {Animal}
+ */
+function Mouse(){
+    Mouse.base.constructor.call(this, 'mouse');
+}
+Mouse.Extends(Animal);
+Mouse.prototype.name="mice";
+function BadMouse(){
+	
+}
+BadMouse.Extends(Mouse);
+
+var l= new Lion();
+
+//l.eat(new BadMouse());
+
+
+
+        </script>
+    </head>
+    <body>
+    	
+    </body>
+</html>
