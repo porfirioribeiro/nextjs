@@ -12,84 +12,23 @@ window.onerror=function(m,f,l){
     </head>
     <body>
     	<div id="test" style="background-color:red;border:1px solid black;width:100px;">0</div><br>
-		<button onclick="aprop.animate({from:10,to:150});">play</button>
-		<button onclick="aprop.animate({from:150,to:10});">reverse</button>
-		<button onclick="bprop.animate({to:{width:150,height:50}});">ob test</button>
-		<button onclick="bprop.animate({to:{width:10,height:50}});">ob test</button>
+		<button onclick="anim.play();">play</button>
+		<button onclick="anim.reverse();">reverse</button>
+		<button onclick="anim.toggle();">toggle</button>
+		<button onclick="aprop.animate({from:10,to:150});">use animate directly</button>
 		<script type="text/javascript">
 var a=10;
-var b={width:10,height:10};
-var aprop,bprop;
-function get(prop){
-	if (prop==aprop){
-		return a;
-	}else if (prop==bprop){
-		return b;
-	}
+function get(){
+	return a;
 }
-function set(prop,value){
+function set(value){
 	var t=document.getElementById("test");
-	if (prop==aprop){
-		a=value;
-		t.innerHTML=a;	
-		t.style.width=a+"px";		
-	}else if (prop==bprop){
-		b=value;
-		t.innerHTML=b;	
-		t.style.width=b.width+"px";	
-		t.style.height=b.height+"px";	
-	}
+	a=value;
+	t.innerHTML=a;	
+	t.style.width=a+"px";		
 }
-
-aprop=Next.Number(null,get,set,true);		
-
-bprop=Next.Object(null,get,set,true,["width","height"]);
-
-/*function test(from,to){
-	this.from=from;
-	this.to=to;
-	this.state = (to>from)?0:1;
-	this.target = (to>from)?1:0;
-	this.lastTime = new Date().getTime();
-	this.duration=4000;
-	this.interval=1;	
-
-	var _this=this;
-	this.intervalId=setInterval(function(){_this.onTimerEvent();},this.interval);
-}
-test.prototype.onTimerEvent=function(){
-		var now = new Date().getTime();
-		var timePassed = now - this.lastTime;
-		this.lastTime = now;
-		var movement = (timePassed / this.duration) * (this.state < this.target ? 1 : -1);
-		if (Math.abs(movement) >= Math.abs(this.state - this.target)) {
-			this.state = this.target;
-		} else {
-			this.state += movement;
-		}
-		
-		try {
-			var v=((-Math.cos(this.state*Math.PI)/2) + 0.5);
-			if (this.to>this.from){
-				v=(v*(this.to-this.from))+this.from;
-			}else{
-				v=(v*(this.from-this.to))+this.to;
-			}
-			var t=document.getElementById("test");
-			t.innerHTML=v;	
-			t.style.width=v+"px";
-		} finally {
-			//this.onStep.call(this);
-			if (this.target == this.state) {
-				window.clearInterval(this.intervalId);
-				this.intervalId = null;
-				//this.onComplete.call(this);
-			}
-		}		
-};
-*/
-
-alert($R(1,10));
+aprop=Next.Number(null,get,set);
+anim=aprop.getAnimation({from:10,to:150});		
 		</script>    	
     </body>
 </html>

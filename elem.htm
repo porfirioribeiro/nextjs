@@ -17,8 +17,7 @@ window.onerror=function(m,f,l){
 	</head>
 	<body>		
 		<div class="foo" id="bar" style="color:blue;background-color:red;border:1px solid black;_width:100px" onmouseover="$(this).opacity.animate({to:0.8,duration:100});" onmouseout="$(this).opacity.animate({to:1,duration:100});" onclick="if (!this._p){this._p=$(this).width.animate({to:100,duration:1000,transition:Next.tx.circInOut});}else{this._p.toggle();}">Put mouse over or click</div>
-		<pre>
-		</pre>
+		<div style="background-color:blue;" onclick="$(this).marginLeft.getAnimation({to:200}).toggle();">click</div>
         <script type="text/javascript">
 HTMLElement.prototype.opacity=function(){
 	if (!this._propOpacity){
