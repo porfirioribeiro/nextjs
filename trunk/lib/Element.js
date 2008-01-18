@@ -242,6 +242,7 @@ HTMLElement.prototype.setOpacity=function(opacity){
 Next.nlMethods.push("setOpacity");
 /**
  * Get the value of the style
+ * Based on http://berniecode.com/writing/animator.html
  * @param {String} style
  */
 HTMLElement.prototype.getStyle=function(property, def){

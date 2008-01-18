@@ -7,7 +7,7 @@ $files=array(
 	"Eventable",
 	"Element",
 	"Animation",
-	"Prop"
+	"Property"
 );
 if (isset($_GET["debug"])){
 	include "jsmin.php";

@@ -79,6 +79,18 @@ Next.Property.prototype.set = function(value, delay){
     }
 };
 /**
+ * Create a animator and return it
+ * @param {Object} options The options for animate
+ * @return {Next.Animation}
+ */
+Next.Property.prototype.getAnimation = function(options){
+	Next.Property.checkAnimOptions(this,options,function(v){
+		this.set(v);
+	});
+    this.animator = new Next.Animation( options);
+    return this.animator;//just for test
+};
+/**
  * Animate this Next.Property<br>
  * options is some of this options:<br>
  * <p><i>[optional]</i><b>from</b>  : Start value, if not specified, the current value is used</p>
@@ -88,10 +100,7 @@ Next.Property.prototype.set = function(value, delay){
  * @return {Next.Animation}
  */
 Next.Property.prototype.animate = function(options){
-	Next.Property.checkAnimOptions(this,options,function(v){
-		this.set(v);
-	});
-    this.animator = new Next.Animation( options);
+	this.getAnimation(options);
 	if (this.from>this.to){
 		this.animator.reverse();
 	}else{
