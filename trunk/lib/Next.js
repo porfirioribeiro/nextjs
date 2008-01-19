@@ -1,7 +1,9 @@
 /**
  * @author Porfirio
  */
-
+/**
+ * Default Namespace
+ */
 var Next=function(){};
 
 
