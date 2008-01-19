@@ -2,6 +2,7 @@
 $files=array(
 	"Next",
 	"Protos",
+	"Color",
 	"Thread",
 	"Enumerable",
 	"Eventable",
