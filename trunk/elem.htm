@@ -7,46 +7,49 @@
 			body{
 				background-color:green;
 			}
+			.navBox{
+				margin:5px;
+			}
+            .navBox .navItem {
+                width: 100px;
+				height:100px;
+                background-color: blue;
+                border: 1px solid white;
+                float: left;
+				padding:10px;
+				color:white;
+				font-weight:bold;
+            }
 		</style>
         <script type="text/javascript">
 window.onerror=function(m,f,l){
 	alert(m+"\n"+f+"\n"+l);
 };        	
         </script>
-		<script type="text/javascript" src="lib/js.php?debug"></script>		
+		<script type="text/javascript" src="lib/js.php?debug_"></script>		
 	</head>
 	<body>		
 		<div class="foo" id="bar" style="color:blue;background-color:red;border:1px solid black;_width:100px" onmouseover="$(this).opacity.animate({to:0.8,duration:100});" onmouseout="$(this).opacity.animate({to:1,duration:100});" onclick="if (!this._p){this._p=$(this).width.animate({to:100,duration:1000,transition:Next.tx.circInOut});}else{this._p.toggle();}">Put mouse over or click</div>
 		<div style="background-color:blue;" onclick="$(this).marginLeft.getAnimation({to:200}).toggle();">click</div>
-        <script type="text/javascript">
-HTMLElement.prototype.opacity=function(){
-	if (!this._propOpacity){
-		this._propOpacity=Prop.Number(this,this.getOpacity,this.setOpacity);	
-	}
-	return this._propOpacity;
-};
-
-HTMLElement.prototype.width=function(){
-	if (!this._propWidth){
-		this._propWidth=Prop.Number(this,function(){
-			return this.getWidth();
-		},function(v){
-			return this.setStyle({"width":v+"px"});
-		});	
-	}
-	return this._propWidth;
-};
-
+		<div id="a" style="background-color:red;width:100px;height:100px;">div a</div>
+		<div id="b" style="background-color:red;" onclick="$(this).size.animate({to:{width:100,height:100}});">div b</div>
+        <div id="nav" class="navBox" onmouseout="ctr(event);">
+			<div id="b1" class="navItem" onmouseover="exp(1);" onmouseout_="ctr(1);">div 1</div>
+			<div id="b2" class="navItem" onmouseover="exp(2);" onmouseout_="ctr(2);">div 2</div>
+			<div id="b3" class="navItem" onmouseover="exp(3);" onmouseout_="ctr(3);">div 3</div>
+			<div id="b4" class="navItem" onmouseover="exp(4);" onmouseout_="ctr(4);">div 4</div>
+		</div>
+		<script type="text/javascript">
 
 HTMLElement.props.push({
 	name:"marginLeft",
 	getter:function(){
 		var v=this.getStyle("margin-left").toFloat();
-		console.log(v);
+		//console.log(v);
 		return v;
 	},
 	setter:function(v){
-		console.log("margin-left:"+v+"px");
+		//console.log("margin-left:"+v+"px");
 		this.setStyle("margin-left:"+v+"px");
 	}
 },{
@@ -61,9 +64,46 @@ HTMLElement.props.push({
 	setter:function(v){
 			return this.setStyle({"width":v+"px"});
 	}
+},{
+	name:"height",
+	getter:function(){
+			return this.getHeight();
+	},
+	setter:function(v){
+			return this.setStyle({"height":v+"px"});
+	}
 });
 
+var $_=$;
+window.$=function(){
+	var e=$_.apply(this,arguments);
+	e.size=Next.Object(e,function(){
+		return {width:this.width.get(),height:this.height.get()};
+	},function(v){
+		this.width.set(v.width);
+		this.height.set(v.height);
+	},false,["width","height"]);
+	
+	return e;
+};
 
+function exp(n){
+	var el=$("b"+n);
+	var els=$$("div.#nav div.navItem");
+	var amm=50/(els.size()-1);
+	els.forEach(function(v,i,o){
+		if (v!=el){
+			v.width.animate({to:100-amm,duration:300});
+		}
+	});
+	el.width.animate({to:150,duration:300});
+}
+function ctr(e){
+	//console.log(e.target);
+	$$("div.#nav div.navItem").forEach(function(v,i,o){
+			v.width.animate({to:100,duration:300});
+	});
+}
         </script>		
 	</body>
 </html>

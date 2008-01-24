@@ -10,7 +10,7 @@ $files=array(
 	"Animation",
 	"Property"
 );
-if (isset($_GET["debug"])){
+if (!isset($_GET["debug"])){
 	include "jsmin.php";
 }
 ob_start ("ob_gzhandler");

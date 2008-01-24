@@ -122,11 +122,11 @@ String.is = function(object){
 };
 
 Number.is = function(object){
-    return typeof(object) == "number" || object instanceof this;
+    return typeof(object) == "number" || object instanceof Number;
 };
 
 Boolean.is = function(object){
-    return typeof(object) == "boolean" || object instanceof this;
+    return typeof(object) == "boolean" || object instanceof Boolean;
 };
 
 Object.isDef = function(object){

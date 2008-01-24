@@ -11,24 +11,53 @@ window.onerror=function(m,f,l){
 		<script type="text/javascript" src="lib/js.php?debug"></script>
     </head>
     <body>
-    	<div id="test" style="background-color:red;border:1px solid black;width:100px;">0</div><br>
-		<button onclick="anim.play();">play</button>
-		<button onclick="anim.reverse();">reverse</button>
-		<button onclick="anim.toggle();">toggle</button>
-		<button onclick="aprop.animate({from:10,to:150});">use animate directly</button>
 		<script type="text/javascript">
-var a=10;
-function get(){
-	return a;
-}
-function set(value){
-	var t=document.getElementById("test");
-	a=value;
-	t.innerHTML=a;	
-	t.style.width=a+"px";		
-}
-aprop=Next.Number(null,get,set);
-anim=aprop.getAnimation({from:10,to:150});		
+//HTMLElement.props.push();		
+var __bool=false;
+var bool=new Next.Bool(null,function(){
+	return __bool;
+},function(v){
+	__bool=v;
+	console.log(v);
+});
+
+var __bool2=true;
+var bool2=new Next.Bool(null,function(){
+	return __bool2;
+},function(v){
+	__bool2=v;
+	console.log(v);
+});
+var __fl=15;
+var fl=new Next.Float(null,function(){
+	return __fl;
+},function(v){
+	__fl=v;
+	console.log(v);
+});
+
+var __fl2=20;
+var fl2=new Next.Float(null,function(){
+	return __fl2;
+},function(v){
+	__fl2=v;
+	console.log(v);
+});
+var __st="Hello";
+var st=new Next.String(null,function(){
+	return __st;
+},function(v){
+	__st=v;
+	console.log(v);
+});
+
+var __st2="World!";
+var st2=new Next.String(null,function(){
+	return __st2;
+},function(v){
+	__st2=v;
+	console.log(v);
+});
 		</script>    	
     </body>
 </html>
