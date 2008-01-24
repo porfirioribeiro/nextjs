@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script type="text/javascript" src="lib/js.php?debug"></script>	
+		<script type="text/javascript">
+
+// Create an object type UserException
+function UserException (message)
+{
+  this.message=message;
+  this.name="UserException";
+  this.line=10;
+  this.file="ba";
+}
+
+// Make the exception convert to a pretty string when used as
+// a string (e.g. by the error console)
+UserException.prototype.toString = function ()
+{
+  return this.name + ': "' + this.message + '"';
+}
+
+// Create an instance of the object type and throw it
+//throw new UserException("Value too high");
+//throw "Error2";
+//throw 42;
+//throw true;
+throw {toString: function() { return "I'm an object!"; } };
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
