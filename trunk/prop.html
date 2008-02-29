@@ -1,63 +1,118 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html debug="true">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
         <title>Insert title here</title>
-        <script type="text/javascript">
-window.onerror=function(m,f,l){
-	alert(m+"\n"+f+"\n"+l);
-};        	
-        </script>
+		<style type="text/css">
+			#tohide{
+				display:none;
+			}
+		</style>
 		<script type="text/javascript" src="lib/js.php?debug"></script>
     </head>
     <body>
+    	<div id="tohide">his div is hidden and show</div>
+		<button onclick="alert($('tohide').visible.is());">is visible?</button>
+		<button onclick="$('tohide').hide('fade');">hide</button>
+		<button onclick="$('tohide').show('fade');">show</button>
+		<button onclick="$('tohide').visible.toggle();">show\hide</button>
 		<script type="text/javascript">
-//HTMLElement.props.push();		
-var __bool=false;
-var bool=new Next.Bool(null,function(){
-	return __bool;
-},function(v){
-	__bool=v;
-	console.log(v);
-});
+HTMLElement.props.push({
+	name:"marginLeft",
+	getter:function(){
+		var v=this.getStyle("margin-left").toFloat();
+		return (isNaN(v))?0:v;
+	},
+	setter:function(v){
+		//console.log("margin-left:"+v+"px");
+		this.setStyle("margin-left:"+v+"px");
+	}
+},{
+	name:"opacity",
+	getter:function(){
+		return parseFloat(this.getOpacity());
+	},
+	setter:HTMLElement.prototype.setOpacity
+},{
+	name:"width",
+	getter:function(){
+			return this.getWidth();
+	},
+	setter:function(v){
+			return this.setStyle({"width":v+"px"});
+	}
+},{
+	name:"height",
+	getter:function(){
+			return this.getHeight();
+	},
+	setter:function(v){
+			return this.setStyle({"height":v+"px"});
+	}
+},{
+	name:"visible",
+	type:Next.Bool,
+	getter:function(){
+		var _d=this.getStyle("display");
+		return _d!="none" && _d!==null;
+	},
+	setter:function(visible){
+		var _d=this.getStyle("display");
+		if (!String.is(this._ext.style.display)){
+			this._ext.style.display=(_d!="none" && _d!==null)?_d:"";
+		}	
+		if (visible){
+			this.setStyle({"display": this._ext.style.display});
+			//if its still not visible, is because we set it to "hide" on css
+			if (!this.visible.is()){
+				this.setStyle("display:"+(this._ext.style.display="block"));
+			}		
+		}else{
+			this.setStyle("display: none");
+		}
+	}
+});		
 
-var __bool2=true;
-var bool2=new Next.Bool(null,function(){
-	return __bool2;
-},function(v){
-	__bool2=v;
-	console.log(v);
-});
-var __fl=15;
-var fl=new Next.Float(null,function(){
-	return __fl;
-},function(v){
-	__fl=v;
-	console.log(v);
-});
+HTMLElement.showHideEffects={};	
+HTMLElement.showHideEffects.fade={
+	show:function(){
+		//make sure it is invisible
+		this.opacity.set(0);
+		this.visible.set(true);
+		this.opacity.animate({from:0,to:1});
+		
+	},
+	hide:function(){
+		this.opacity.animate({to:0,onComplete:function(){
+			this.visible.set(false);
+			//make it opaque after hide it (RollBack) so if we use other methods to show, it appears alright
+			this.opacity.set.bindLater(0,this.opacity,1);
+		}.bind(this)});
+	}
+};
 
-var __fl2=20;
-var fl2=new Next.Float(null,function(){
-	return __fl2;
-},function(v){
-	__fl2=v;
-	console.log(v);
-});
-var __st="Hello";
-var st=new Next.String(null,function(){
-	return __st;
-},function(v){
-	__st=v;
-	console.log(v);
-});
-
-var __st2="World!";
-var st2=new Next.String(null,function(){
-	return __st2;
-},function(v){
-	__st2=v;
-	console.log(v);
-});
+HTMLElement.prototype.show=function(effect,options){
+	if (this.visible.is()){
+		return;
+	}
+	effect=HTMLElement.showHideEffects[effect];
+	if (Object.is(effect) && Function.is(effect.show)){
+		effect.show.apply(this,[]);
+	}else{
+		this.visible.set(true);
+	}
+};
+HTMLElement.prototype.hide=function(effect,options){
+	if (!this.visible.is()){
+		return;
+	}
+	effect=HTMLElement.showHideEffects[effect];
+	if (Object.is(effect) && Function.is(effect.hide)){
+		effect.hide.apply(this,[]);
+	}else{
+		this.visible.set(false);
+	}
+};
 		</script>    	
     </body>
 </html>

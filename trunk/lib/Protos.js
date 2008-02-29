@@ -94,16 +94,22 @@ Function.prototype.bind=function(object){
       return __method.apply(object, args.concat(Array.prototype.slice.apply(arguments,[0,arguments.length])));
     };	
 };
+Function.prototype.bindLater = function(ms,object){
+	var args=Array.prototype.slice.apply(arguments,[1,arguments.length]);
+	return this.bind.apply(this,args).delay(ms);
+};
 /**
  * Returns a new thread with this function as #run function
  * @return {$.Thread} The new Thread
  */
 Function.prototype.toThread=function(){
-	return new $.Thread(this);
+	return new Next.Thread(this);
 };
 
 Function.prototype.delay=function(ms){
-	return setInterval(this,ms);
+	var t=this.toThread();
+	t.start(ms);
+	return t;
 };
 
 Function.prototype.execPeriod=function(ms){
@@ -138,17 +144,6 @@ Object.isNull = function(object){
 Object.isDefined = Object.isDef;
 
 
-/**
- * Escape the string to be used on RegExp
- * @return {String}
- */
-String.prototype.escape = function(){
-    if (!arguments.callee.sRE) {
-        var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
-        arguments.callee.sRE = new RegExp('(\\' + specials.join('|\\') + ')', 'g');
-    }
-    return this.replace(arguments.callee.sRE, '\\$1');
-};
 /**
  * Check the string againts the passed string, optional case insensitive
  * @param {String} text
@@ -246,6 +241,63 @@ String.prototype.strip = function(){
 	return this.replace(/^\s+/, '').replace(/\s+$/, '');
 };
 
+
+/**
+ * Escape the string to be used on RegExp
+ * @return {String}
+ */
+String.prototype.escapeRE = function(){
+    if (!arguments.callee.sRE) {
+        var specials = ['/', '.', '*', '+', '?', '|', '(', ')', '[', ']', '{', '}', '\\'];
+        arguments.callee.sRE = new RegExp('(\\' + specials.join('|\\') + ')', 'g');
+    }
+    return this.replace(arguments.callee.sRE, '\\$1');
+};
+/**
+ * Convets this string to an Regular Expression
+ * @param {Object} [e] optional parameters to pass to re
+ * @return {RegExp} the new created RegExp
+ */
+String.prototype.re=function(e){
+	return new RegExp(this.replace(/^\/(.*)\/$/,"$1"),e);
+};
+/**
+ * Creates or checks the namespace on this string<br>
+ * "next.gfx".ns().circle=function(){...}; <br><b>or</b><br>
+ * "next.gfx".ns({<br>
+ * 		rect:function(){...}<br>
+ * });<br>
+ * @param {String Object} [separator] if its a String, its used as separator, else if it is an object, its used as object, if its not a sctring the separator will be "."
+ * @param {Object} [object] Optional object to use on last part
+ */
+String.prototype.ns=function(separator, object){
+	if (!String.is(separator)){
+		object=separator;
+		separator=".";
+	}
+	if (this.empty()){
+		throw new Error("String#ns - \nThe string is empty");
+	}
+	if (!("^(\\w|\\$|"+separator.escapeRE()+")*$").re().test(this)){
+		throw new Error("String#ns - \nInvalid characters on this String: "+ this + "\nSeparator: " + separator);
+	}
+	if (!Object.is(object)){
+		object={};
+	}
+	var scope=window;
+	this.split(separator).forEach(function(v,i,a){
+		if (!Object.is(scope[v])){
+			scope[v]=((i+1)==a.length)?object:{};
+		}else{
+			if ((i+1)==a.length){
+				Next.extendObj(scope[v],object);
+			}
+		}
+		scope=scope[v];
+	});
+	return scope;
+};
+
 String.prototype.toInt=function(){
 	return parseInt(this,0);
 };
@@ -258,6 +310,8 @@ String.prototype.toFloat=function(){
 Number.prototype.toFloat=function(){
 	return (this+"").toFloat();
 };
+
+
 //Array
 /**
  * Returns the first index number at which the specified

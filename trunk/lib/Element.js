@@ -32,9 +32,9 @@ HTMLElement.extend=function(element){
 					return;//ignore
 				}
 				if (!Function.is(prop.type)) {
-					prop.type = Next.Number;
+					prop.type = Next.Float;
 				}
-				this[prop.name] = prop.type(this, prop.getter, prop.setter);
+				this[prop.name] = new prop.type(this, prop.getter, prop.setter);
 			}
 		}, element);	
 	}    	
@@ -42,7 +42,7 @@ HTMLElement.extend=function(element){
 };
 HTMLElement.prototype._extended=true; 
 HTMLElement.prototype.isElement=true;
-
+HTMLElement.prototype._ext={style:{}};
 /**
  * Get child elements by selector text 
  * @param {Object} selector

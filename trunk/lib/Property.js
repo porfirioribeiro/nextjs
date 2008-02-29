@@ -93,6 +93,87 @@ Next.String.prototype.toString=Next.String.prototype.get;
 Next.String.prototype.concat=function(str){
 	this.set(this.get()+""+str);
 };
+
+Next.AnimatedProperty=function(thisObject, getter, setter){
+	Next.Property.apply(this,arguments);
+};
+Next.AnimatedProperty.Extends(Next.Property);
+Next.AnimatedProperty.prototype.animator = null;
+/**
+ * Create a animator and return it
+ * @param {Object} options The options for animate
+ * @return {Next.Animation}
+ */
+Next.AnimatedProperty.prototype.getAnimation = function(options){
+    if (this.animator) {
+        this.animator.stop();
+    }
+	
+	if (Object.isNull(options.to) && Object.isNull(options.by)){
+		throw Error("Please specify where 'to' go!");
+	}else{
+		this.to=options.to;
+		if (this.type.is(this.to)){
+			this.to=this.to.get();
+		}
+	}	
+	if (Object.isNull(options.from)){
+		this.from=this.get();
+	}else{
+		this.from=options.from;
+		if (this.type.is(this.from)){
+			this.from=this.from.get();
+		}
+	}	
+	if (Number.is(options.by)){
+		this.to=this.from+options.by;
+	}
+	console.log("From: "+this.from+" - To: "+this.to);
+	if (options.onStep){
+		options.userOnStep=options.onStep;
+	}	
+	var self=this;
+	options.onStep=function(v){
+		var V=self.onStep(v);
+		self.set(V,v);
+		if(options.userOnStep){
+			options.userOnStep.apply(self,[V,v]);
+		}
+		
+	};	
+    this.animator = new Next.Animation( options);
+    return this.animator;
+};
+Next.AnimatedProperty.prototype.animate=function(options){
+	return this.getAnimation(options).play( (options && options.delay)?options.delay:0 );
+};
+Next.AnimatedProperty.prototype.animateTo = function(to, options ){
+	options=(options || {});
+	options.to=to;
+	return this.animate(options);
+};
+Next.AnimatedProperty.prototype.animateFromTo = function(from, to, options ){
+	options=(options || {});
+	options.from=from;
+	options.to=to;
+	return this.animate(options);
+};
+Next.AnimatedProperty.prototype.animateBy=function(by,options){
+	options=(options || {});
+	options.by=by;
+	return this.animate(options);	
+};
+Next.Property.prototype.onStep=function(v){
+	var V;
+	if (this.to>this.from){
+		V=(v*(this.to-this.from))+this.from;
+	}else{
+		v=1-v;
+		V=(v*(this.from-this.to))+this.to;
+	}		
+	return V;
+};
+
 /**
  * Float  Property
  * @param {Object} thisObject
@@ -103,9 +184,11 @@ Next.String.prototype.concat=function(str){
 Next.Float=function(thisObject, getter, setter){
 	Next.Property.apply(this,arguments);
 };
-Next.Float.Extends(Next.Property);
+Next.Float.Extends(Next.AnimatedProperty);
 Next.Float.prototype.type=Next.Float;
 Next.Float.prototype.typeOfCheck=Number.is;
+
+
 
 
 Next.Number=function(thisObject,getter,setter,general){
@@ -121,7 +204,7 @@ Next.Number=function(thisObject,getter,setter,general){
 
 
 
-
+Next.Number=Next.Float;
 
 
 
