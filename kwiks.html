@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html debug="true">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+        <title>Untitled Document</title>
+        <style type="text/css">
+            
+            
+            #kwicks_container {
+                background-color: gray;
+                height: 100px;
+				width:846px;
+            }
+            
+            #kwicks {
+                position: relative;
+				padding:0px;
+            }
+            
+            #kwicks .kwick {
+            	margin-left:0px;
+                float: left;
+                display: block;
+                width: 117px;
+                height: 100px;
+            }
+            
+            #kwick_red {
+                background-color: red;
+            }
+            
+            #kwick_orange {
+                background-color: orange;
+            }
+            
+            #kwick_yellow {
+                background-color: yellow;
+            }
+            
+            #kwick_green {
+                background-color: green;
+            }
+            
+            #kwick_blue {
+                background-color: blue;
+            }
+            
+            #kwick_indigo {
+                background-color: indigo;
+                color: #fff;
+            }
+            
+            #kwick_violet {
+                background-color: violet;
+            }
+            
+            span.clr {
+                clear: both;
+                display: block;
+            }
+        </style>
+		<script type="text/javascript" src="lib/js.php?debug"></script>
+    </head>
+    <body>
+        <h3>Kwick</h3>
+        <div id="kwicks_container">
+            <ul id="kwicks">
+                <li id="kwick_red" class="kwick">
+                    <span>Red</span>
+                </li>
+                <li id="kwick_orange" class="kwick">
+                    <span>Orange</span>
+                </li>
+                <li id="kwick_yellow" class="kwick">
+                    <span>Yellow</span>
+                </li>
+                <li id="kwick_green" class="kwick">
+                    <span>Green</span>
+                </li>
+                <li id="kwick_blue" class="kwick">
+                    <span>Blue</span>
+                </li>
+                <li id="kwick_indigo" class="kwick">
+                    <span>Indigo</span>
+                </li>
+                <li id="kwick_violet" class="kwick">
+                    <span>Violet</span>
+                </li>
+            </ul>
+            <span class="clr"><!-- spanner --></span>
+        </div>
+		<script type="text/javascript">
+			
+HTMLElement.props.push({
+	name:"width",
+	getter:function(){
+			return this.getWidth();
+	},
+	setter:function(v){
+			return this.setStyle({"width":v+"px"});
+	}
+});
+			var szNormal = 117, szSmall  = 100, szFull   = 219;
+			var options={duration: 300, transition: Next.tx.bounceOut};
+			var kwicks = $$("#kwick li.kwick");
+            kwicks.forEach(function(kwick, i){
+				kwick.onmouseover=function(){
+					kwick.width.animateTo(szFull,options);
+		            /*kwicks.forEach(function(other, j){
+						kwick.width.animateTo(szSmall,options);
+		            });		*/			
+				};
+            });
+			$("kwicks").onmouseout=function(){
+				kwicks.forEach(function(kwick, i){
+					kwick.width.animateTo(szNormal,options);
+				});
+			};
+/*
+
+ 
+var kwicks = $$("#kwicks .kwick");
+var fx = new Fx.Elements(kwicks, {wait: false, duration: 300, transition: Fx.Transitions.Back.easeOut});
+kwicks.each(function(kwick, i) {
+	kwick.addEvent("mouseenter", function(event) {
+		var o = {};
+		o[i] = {width: [kwick.getStyle("width").toInt(), szFull]}
+		kwicks.each(function(other, j) {
+			if(i != j) {
+				var w = other.getStyle("width").toInt();
+				if(w != szSmall) o[j] = {width: [w, szSmall]};
+			}
+		});
+		fx.start(o);
+	});
+});
+ 
+$("kwicks").addEvent("mouseleave", function(event) {
+	var o = {};
+	kwicks.each(function(kwick, i) {
+		o[i] = {width: [kwick.getStyle("width").toInt(), szNormal]}
+	});
+	fx.start(o);
+})
+
+ */			
+		</script>
+    </body>
+</html>

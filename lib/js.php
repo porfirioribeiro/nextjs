@@ -1,5 +1,6 @@
 <?php
 $files=array(
+	"firebug/firebug",
 	"Next",
 	"Protos",
 	"Color",
@@ -17,7 +18,7 @@ ob_start ("ob_gzhandler");
 if($ext=="js") $ext="javascript";
 header("Content-type: text/javascript; charset: UTF-8");
 header("Content-Encoding: gzip,deflate");
-header("Expires: ".gmdate("D, d M Y H:i:s", time() + (24 * 60 * 60 * 60)) . " GMT");//adiciona 1 dia ao tempo de expiração
+header("Expires: ".gmdate("D, d M Y H:i:s", time() + (24 * 60 * 60 * 60)) . " GMT");//adiciona 1 dia ao tempo de expiraï¿½ï¿½o
 header( "ETag: ".dechex( $file_last_modified ) );
 header( "Cache-Control: must-revalidate, proxy-revalidate, max-age=" . $max_age . ", s-maxage=" . $max_age );
 

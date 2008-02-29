@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<html debug="true">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Untitled Document</title>
@@ -26,11 +26,11 @@ window.onerror=function(m,f,l){
 	alert(m+"\n"+f+"\n"+l);
 };        	
         </script>
-		<script type="text/javascript" src="lib/js.php?debug_"></script>		
+		<script type="text/javascript" src="lib/js.php?debug"></script>		
 	</head>
 	<body>		
 		<div class="foo" id="bar" style="color:blue;background-color:red;border:1px solid black;_width:100px" onmouseover="$(this).opacity.animate({to:0.8,duration:100});" onmouseout="$(this).opacity.animate({to:1,duration:100});" onclick="if (!this._p){this._p=$(this).width.animate({to:100,duration:1000,transition:Next.tx.circInOut});}else{this._p.toggle();}">Put mouse over or click</div>
-		<div style="background-color:blue;" onclick="$(this).marginLeft.getAnimation({to:200}).toggle();">click</div>
+		<div id="idmg" style="background-color:blue;" onclick="$(this).marginLeft.animateBy(100);">click</div>
 		<div id="a" style="background-color:red;width:100px;height:100px;">div a</div>
 		<div id="b" style="background-color:red;" onclick="$(this).size.animate({to:{width:100,height:100}});">div b</div>
         <div id="nav" class="navBox" onmouseout="ctr(event);">
@@ -45,8 +45,7 @@ HTMLElement.props.push({
 	name:"marginLeft",
 	getter:function(){
 		var v=this.getStyle("margin-left").toFloat();
-		//console.log(v);
-		return v;
+		return (isNaN(v))?0:v;
 	},
 	setter:function(v){
 		//console.log("margin-left:"+v+"px");
@@ -54,7 +53,9 @@ HTMLElement.props.push({
 	}
 },{
 	name:"opacity",
-	getter:HTMLElement.prototype.getOpacity,
+	getter:function(){
+		return parseFloat(this.getOpacity());
+	},
 	setter:HTMLElement.prototype.setOpacity
 },{
 	name:"width",
@@ -74,7 +75,7 @@ HTMLElement.props.push({
 	}
 });
 
-var $_=$;
+/*var $_=$;
 window.$=function(){
 	var e=$_.apply(this,arguments);
 	e.size=Next.Object(e,function(){
@@ -86,7 +87,7 @@ window.$=function(){
 	
 	return e;
 };
-
+*/
 function exp(n){
 	var el=$("b"+n);
 	var els=$$("div.#nav div.navItem");
@@ -104,6 +105,8 @@ function ctr(e){
 			v.width.animate({to:100,duration:300});
 	});
 }
-        </script>		
+        
+	
+		</script>		
 	</body>
 </html>
