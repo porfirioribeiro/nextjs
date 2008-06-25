@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Strict//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html debug="true">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Insert title here</title>
+		<script type="text/javascript" src="firebug/firebug.js"></script>
+		<script type="text/javascript" src="nQuery.js"></script>
+        <script type="text/javascript">
+		window.$=nQuery;
+		window.$$=nQuery.Element;
+		window.$A=nQuery.Array;
+		window.$log=console.log;
+		window.$error=console.error;
+        </script>
+    </head>
+    <body>
+    	<div id="test">
+    		boo
+    	</div>
+		<div id="other">
+			as
+		</div>
+		<div class="class">
+			blaaa
+		</div>
+		<div>
+			boo
+		</div>
+		<script type="text/javascript">
+			nQuery.Selector={
+				operators:{
+			        '=': function(nv, v){
+			            return nv == v;
+			        },
+			        '!=': function(nv, v){
+			            return nv != v;
+			        },
+			        '^=': function(nv, v){
+			            return nv.startsWith(v);
+			        },
+			        '$=': function(nv, v){
+			            return nv.endsWith(v);
+			        },
+			        '*=': function(nv, v){
+			            return nv.contains(v);
+			        },
+			        '~=': function(nv, v){
+			            return (' ' + nv + ' ').contains(' ' + v + ' ');
+			        },
+			        '|=': function(nv, v){
+			            return ('-' + nv.toUpperCase() + '-').contains('-' + v.toUpperCase() + '-');
+			        }					
+				}
+			};
+			nQuery.__chkSelectors=function(el,selectors){
+				return true;
+			};
+			/**
+			 * 
+			 * @param {HTMLElement} el
+			 * @param {Object} att
+			 * @param {Object} val
+			 */
+			nQuery.att=function(el,att, val){
+				if (!val){
+					if (el.getAttribute){
+						var ret=el.getAttribute(att);
+						if (ret){
+							return ret;
+						}		
+					}
+					return el[att];
+				}else{
+					if (el.setAttribute){
+						el.setAttribute(att, val);
+						if (el.getAttribute(att)==val){
+							return;
+						}
+					}
+					el[att]=val;
+										
+				}
+			};
+			nQuery.prototype.init=function(selector, context){
+				if (typeof selector!="string"){
+					return;
+				}
+				context=context?context:document;
+				selector=selector.split(",");
+				for (var i=0;i<selector.length;i++){
+					//^(\w+)?(\.\w+)?(#\w+)?(\[.*\])*$
+					var match=selector[i].match(/^(\w+)?(\.\w+)?(#\w+)?(\[.*\])*$/);
+					if (match) {
+						var els=[];
+						//tag
+						var _tag=match[1]?match[1]:"*";
+						//class
+						var _class=match[2]?(match[2].replace(/\./,"")):false;
+						//id
+						var _id=match[3]?(match[3].replace(/#/,"")):false;
+						//selectors
+						var _selectors=match[4];
+						if (_id){
+							var _el=context.getElementById(_id);
+							if ((!_el) || 
+								(_tag!="*" && (!_el.tagName.equals(_tag,true))) || //tag
+								(_class && !_el.className.match(new RegExp("(\\s|^)"+_class+"(\\s|$)"))) || //class
+								(_selectors && !nQuery.__chkSelectors(_el,_selectors))) {
+								continue;
+							}
+							this.push(new nQuery.Element(_el));
+						}else{
+							els=context.getElementsByTagName(_tag);
+							if (els && els.length>0){
+								for (var f=0;f<els.length;f++){
+									var _el=els[f];
+									if (!(_class && !_el.className.match(new RegExp("(\\s|^)"+_class+"(\\s|$)")))){
+										if (!this.some(function(nel){
+											return nel.el==_el;
+										})){
+											this.push(new nQuery.Element(_el));
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			};
+			
+			var q=$(".class,div");
+			$log(q);
+		</script>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script type="text/javascript" src="Property.js"></script>
+		<script type="text/javascript">
+
+function Elem(el){
+	this.el=(typeof(el)=="string")?document.getElementById(el):el;
+	this.id=this.el.id;
+	this.el.thisEl=this;
+	prop.Property.init(this,["pos"]);
+}
+/**
+ * X position of the element
+ * @type {prop.Property} X pos
+ */
+Elem.prototype.pos={
+	type:prop.Object,
+	get:function(){
+		return {
+			x: parseFloat(this.el.style.left),
+			y: parseFloat(this.el.style.top)
+		};
+	},
+	set:function(value){
+		this.el.style.left=value.x+"px";
+		this.el.style.top=value.y+"px";
+	}
+};
+var test, other;
+
+
+		</script>
+	</head>
+	<body>
+		<div id="test" style="position:absolute;left:100px;top:100px;width:100px;height:100px;border: 1px solid black;background:red;">
+			Left: 100px
+		</div>
+		<div id="other" style="position:absolute;left:300px;top:100px;width:50px;height:20px;border: 1px solid black;background:blue;">
+		inner
+		</div>
+		<button onclick="alert(test.pos.get().x+'-'+test.pos.get().y);">get()</button>
+		<button onclick="test.pos.set({x:10,y:35});">set({x:10,y:35})</button>
+		<button onclick="test.pos.add({x:10,y:10});">add({x:10,y:10})</button>
+		<button onclick="test.pos.add({x:-10,y:-10});">add({x:-10,y:-10})</button>
+		<button onclick="other.pos.set(test.pos);">movo to</button>
+		<button onclick="other.pos.unbind();">Unbind</button>
+		<button onclick="other.pos.bind(test.pos);">Bind, no offset</button>
+		<script type="text/javascript">
+			test=new Elem("test");
+			other=new Elem("other");
+			
+			other.pos.bind(test.pos, function(value){
+				return {
+					x: value.x + 10,
+					y: value.y + 10
+				};
+			});
+		</script>
+	</body>
+</html>

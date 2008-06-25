@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html debug="true">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script type="text/javascript" src="firebug/firebug.js"></script>
+		<script type="text/javascript" src="Array.js"></script>
+		<script type="text/javascript">
+			/**
+			 * @alias console
+			 */
+			var $log=console.log;
+			for (var i in console){
+				$log[i]=console[i];
+			}
+			
+			var test={nice:10};
+			["concat","join","pop","push","reverse","shift","slice","sort","splice","toString"].forEach(function(v,i,a){
+				this[v]=Array.prototype[v];
+			},test);
+			for (var i in Array.prototype){
+				if (!i in test){
+					test[i]=Array.prototype[i];
+				}
+			}
+			try{
+				[0,1,2,3].forEach(function(v){
+					//$log(v);
+					throw false;
+				});				
+			}catch(e){
+				
+			}
+
+
+			onload=function(){
+	            (function(){
+	                alert($A(document.getElementsByTagName("div")));
+	            })(1, 2, 3);
+				/*var b=$A(document.getElementsByTagName("div"));
+				$log(b.length);
+				$log(b.getProperty("innerHTML"));
+				b.setProperty("innerHTML","nice");	*/			
+			};
+
+			
+		</script>
+	</head>
+	<body>
+		<div>a</div>
+		<div>a</div>
+	</body>
+</html>
