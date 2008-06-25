@@ -243,7 +243,8 @@ Next.nlMethods.push("setOpacity");
 /**
  * Get the value of the style
  * Based on http://berniecode.com/writing/animator.html
- * @param {String} style
+ * @param {String} property
+ * @param {String} def
  */
 HTMLElement.prototype.getStyle=function(property, def){
 	def=(def===undefined)?"":def;

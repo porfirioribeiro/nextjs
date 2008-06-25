@@ -160,7 +160,7 @@ String.prototype.equals = function(text, i){
 };
 /**
  * Check if the string contains other string
- * @param {String} what
+ * @param {String} text
  * @return {Boolean}
  */
 String.prototype.contains = function(text){

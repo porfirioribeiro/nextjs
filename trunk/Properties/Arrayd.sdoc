@@ -1,0 +1,15 @@
+/**
+ * Use this ScriptDoc file to manage the documentation for the corresponding namespace in your JavaScript library.
+ *
+ * @author Porfirio
+ */
+/**
+ * Adds an array of elements to the end of an array and returns the new length.
+ * This method changes the length of the array.
+ * @alias Array#pushArray
+ * @id {Array#pushArray}
+ * @param {Array} arr
+ * @return {Number}
+ */
+Array.prototype.pushArray=function (){};
+

@@ -63,7 +63,7 @@ if (!("console" in window) || !("firebug" in console)) {
             html.push('<table>');
             for (var i = 0; i < pairs.length; ++i)
             {
-                var name = pairs[i][0], value = pairs[i][1];
+                name = pairs[i][0], value = pairs[i][1];
                 
                 html.push('<tr>', 
                 '<td class="propertyNameCell"><span class="propertyName">',
@@ -237,6 +237,7 @@ if (!("console" in window) || !("firebug" in console)) {
                 return scripts[i].src.substr(0, lastSlash);
             }
         }
+        return "";
     }
     
     function evalCommandLine()
@@ -362,11 +363,11 @@ if (!("console" in window) || !("firebug" in console)) {
                 appendText(part, html);
         }
 
-        for (var i = objIndex+1; i < objects.length; ++i)
+        for (i = objIndex+1; i < objects.length; ++i)
         {
             appendText(" ", html);
             
-            var object = objects[i];
+            object = objects[i];
             if (typeof(object) == "string")
                 appendText(object, html);
             else
@@ -416,9 +417,11 @@ if (!("console" in window) || !("firebug" in console)) {
                     return "&#39;";
                 case '"':
                     return "&quot;";
+                default:
+                    return "?";
             }
             return "?";
-        };
+        }
         return String(value).replace(/[<>&"']/g, replaceChars);
     }
 
@@ -596,7 +599,7 @@ if (!("console" in window) || !("firebug" in console)) {
         );
         
         logRow(html, "error");
-    };
+    }
 
     function onKeyDown(event)
     {
