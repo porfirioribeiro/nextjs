@@ -129,7 +129,11 @@
 			};
 			
 			var q=$(".class,div");
-			$log(q);
+			$A.push(q,"wow");
+			q.push("nice");
+			Array.prototype.push.call(q,"fuckyou")
+			$log(q.toArray());
+			
 		</script>
     </body>
 </html>
