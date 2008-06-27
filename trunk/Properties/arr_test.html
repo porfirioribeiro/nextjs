@@ -25,7 +25,7 @@
 			}
 			try{
 				[0,1,2,3].forEach(function(v){
-					//$log(v);
+					$log(v);
 					throw false;
 				});				
 			}catch(e){
@@ -34,13 +34,16 @@
 
 
 			onload=function(){
-	            (function(){
-	                alert($A(document.getElementsByTagName("div")));
-	            })(1, 2, 3);
-				/*var b=$A(document.getElementsByTagName("div"));
+				var b=$A(document.getElementsByTagName("div"));
 				$log(b.length);
-				$log(b.getProperty("innerHTML"));
-				b.setProperty("innerHTML","nice");	*/			
+				//$log(b.getProperty("innerHTML"));
+				//b.setProperty("innerHTML","nice");			
+				var divs=document.getElementsByTagName("div");
+				$A.forEach(divs,function(v,i,a){
+					$log(v);
+				});
+				
+				$log(divs);
 			};
 
 			
@@ -48,6 +51,6 @@
 	</head>
 	<body>
 		<div>a</div>
-		<div>a</div>
+		<div>b</div>
 	</body>
 </html>

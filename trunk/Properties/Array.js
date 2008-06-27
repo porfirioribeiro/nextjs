@@ -11,26 +11,26 @@
  * @param {Object} iterable
  * @return {Array}
  */
-Array.Ext = function(iterable){
-    if (iterable instanceof Array) {
-        return iterable;
-    }
-    else 
-        if (iterable.toArray) {
-            return iterable.toArray();
-        }
-        else {
-            if (typeof(iterable) == "string") {
-                return iterable.split(" ");
-            }
-            else {
-                if (iterable.length) {
-					alert(iterable.length);
-					/*var res=[];
-					for (var i=0;iterable.length;i++){
-						res[i]=iterable[i];
+Array.Ext = function(list){
+    if (list instanceof Array) {
+        return list;
+    }else 
+        if (list.toArray) {
+            return list.toArray();
+        } else {
+            if (typeof(list) == "string") {
+                return list.split(" ");
+            } else {
+                if (list.length) {
+					try{
+						return Array.prototype.slice.call(list,0);
+					}catch(e){
+						var res=[];
+						for (var i=0;i<list.length;i++){
+							res[i]=list[i];
+						}
+						return res;					
 					}
-					return res;*/
                 }
             }
         }
@@ -480,6 +480,15 @@ Array.Ext = function(iterable){
 	 */
 	$A.unshift=function(array, element1, elementN){
 		return Ap.unshift.apply(array, Ap.slice.apply(arguments, [1, arguments.length]));
+	};
+	/**
+	 * @alias Array.Ext.forEach 
+	 * @param {Object} array
+	 * @param {Object} callback
+	 * @param {Object} thisObject
+	 */
+	$A.forEach=function(array, callback, thisObject){
+		Ap.forEach.call(array, callback, thisObject);
 	};
 	
 	
