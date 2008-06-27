@@ -311,22 +311,27 @@ Array.Ext = function(list){
 		    return result;			
 		};
 	}
-	if (!Ap.getProperty){
-		Ap.getProperty=function(name){
-		    var results = [];
-		    this.forEach(function(object, index, array) {
-		      results.push(object[name]);
-		    });
-		    return results;			
-		};
-	}
-	if (!Ap.setProperty){
-		Ap.setProperty=function(name, value){
-		    this.forEach(function(object, index, array) {
-		      object[name]=value;
-		    });		
-		};
-	}
+	/**
+	 * Get and Set a property on all objects
+	 * @param {String} name
+	 * @param {Object} [value] If specified it will give the value to the pluck
+	 */
+	Ap.pluck=function(name, value){
+		var results = [];
+		var set=(arguments.length==2);
+	    this.forEach(function(object, index, array) {
+			var chunks=name.split(".");
+			for (var i=0;i<(chunks.length-1);i++){
+				object=object[chunks[i]];
+			}
+			results.push(object[chunks[chunks.length-1]]);
+			if (set){
+				object[chunks[chunks.length-1]]=value;
+			}
+	    });		
+		return results;	
+	};
+
     if (!Ap.grep) {
 		/**
 		 * Use RegExp to filter an array
@@ -503,7 +508,6 @@ Array.Ext = function(list){
          */
         Fp.bind = function(thisObject, arg1, arg2){
             var args = $A(arguments), object = args.shift(), _method = this;
-            alert(object);
             return function(){
                 return _method.apply(thisObject, args.concat($A(arguments)));
             };

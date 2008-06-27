@@ -86,6 +86,9 @@ if (!window.console || !console.firebug) {
             clear: function(){
                 consoleBody.innerHTML = "";
             },
+			logsrc:function(){
+				console.dirxml(document.getElementsByTagName('html')[0])
+			},
             open: function(){
                 toggleConsole(true);
             },

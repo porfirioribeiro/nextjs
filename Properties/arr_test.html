@@ -1,11 +1,25 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html debug="true">
+<html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Untitled Document</title>
-		<script type="text/javascript" src="firebug/firebug.js"></script>
+		<script type="text/javascript" src="../firebug/firebug.js"></script>
 		<script type="text/javascript" src="Array.js"></script>
 		<script type="text/javascript">
+			console.profilerOn=true;
+			if (console.profilerOn){
+				Function.prototype.profile=function( thisObject, args){
+					console.profile();
+					this.apply(thisObject,args);
+					console.profileEnd();					
+				};
+				console.profileIt=function(name, callback, thisObject, args){
+					console.profile(name);
+					callback.apply(thisObject,args);
+					console.profileEnd();
+				};
+			}
+			var _c=console && console.open && console.open();
 			/**
 			 * @alias console
 			 */
@@ -13,37 +27,54 @@
 			for (var i in console){
 				$log[i]=console[i];
 			}
-			
 			var test={nice:10};
 			["concat","join","pop","push","reverse","shift","slice","sort","splice","toString"].forEach(function(v,i,a){
 				this[v]=Array.prototype[v];
 			},test);
-			for (var i in Array.prototype){
+			for (i in Array.prototype){
 				if (!i in test){
 					test[i]=Array.prototype[i];
 				}
 			}
-			try{
-				[0,1,2,3].forEach(function(v){
-					$log(v);
-					throw false;
-				});				
-			}catch(e){
-				
+			/**
+			 * Tries to execute a function on each element of the array until it fails
+			 * @alias Array.prototype.tryForEach
+			 * @alias Array.prototype.each
+			 * @param {Object} callback
+			 * @param {Object} thisObject
+			 */
+			Array.prototype.tryForEach=Array.prototype.each=function(callback, thisObject){
+				try{
+					return this.forEach(callback, thisObject) || null;
+				}catch(e){
+					return e;
+				}
+			};
+			
+			Array.ExtendedFn=function(){
+				this.test=function(){
+					for (var i=0;i<this.length;i++){
+						$log(this[i]);
+					}
+				};
+			};
+			
+			Array.ExtendedFn.call(Array.prototype);
+			
+			[1,2,3].test();
+			
+			function Query(){
+				$A.pushArray(this,arguments);
 			}
+			
+			Array.ExtendedFn.call(Query.prototype);
+			
+			var q= new Query(1,2,3);
+			
+			q.test();
+			onload=function(){			
 
-
-			onload=function(){
-				var b=$A(document.getElementsByTagName("div"));
-				$log(b.length);
-				//$log(b.getProperty("innerHTML"));
-				//b.setProperty("innerHTML","nice");			
-				var divs=document.getElementsByTagName("div");
-				$A.forEach(divs,function(v,i,a){
-					$log(v);
-				});
 				
-				$log(divs);
 			};
 
 			
