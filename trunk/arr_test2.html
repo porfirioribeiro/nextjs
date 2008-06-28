@@ -1,0 +1,352 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script type="text/javascript" src="firebug/firebug.js"></script>
+		<script type="text/javascript">
+			var __c= console && console.open && console.open();
+			/**
+			 * @extends {Array}
+			 */
+			Array.Extend=function(){
+				var Ap=Array.prototype;
+				if (typeof(this.length)!="number"){
+					this.length=0;
+				}
+				if (this!=Ap){//Add default Array funtions to non array objects!
+					"concat join pop push reverse shift slice sort splice".split(" ").forEach(function (elem){
+					    this[elem] = function(){
+					        return Array.prototype[elem].apply(this, arguments);
+					    };
+					},this);				
+				}
+				
+				var __unshift=Ap.unshift;
+				this.unshift=function(element1, elementN){ //>    IE Fix    <
+					return __unshift.apply(this,arguments) | this.length;
+				};				
+			    /**
+			     * Adds an array of elements to the end of an array and returns the new length.
+			     * This method changes the length of the array.
+			     * @alias Array.prototype.pushArray
+			     * @param {Array} arr
+			     * @return {Number}
+			     */
+			    this.pushArray = function(arr){
+			        return this.push.apply(this, $A(arr));//TODO $A
+			    };				
+							
+			    //Array
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:indexOf
+		        this.indexOf = Ap.indexOf || function(searchElement, fromIndex){
+		            var len = this.length;
+		            fromIndex = fromIndex || 0;
+		            fromIndex = (fromIndex < 0) ? Math.ceil(fromIndex) : Math.floor(fromIndex);
+		            if (fromIndex < 0) {
+		                fromIndex += len;
+		            }
+		            for (; fromIndex < len; fromIndex++) {
+		                if (fromIndex in this && this[fromIndex] === searchElement) {
+		                    return fromIndex;
+		                }
+		            }
+		            return -1;
+		        };
+
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:lastIndexOf
+		        this.lastIndexOf = Ap.lastIndexOf || function(searchElement, fromIndex){
+		            var len = this.length;
+		            fromIndex = Number(arguments[1]);
+		            if (isNaN(fromIndex)) {
+		                fromIndex = len - 1;
+		            }
+		            else {
+		                fromIndex = (fromIndex < 0) ? Math.ceil(fromIndex) : Math.floor(fromIndex);
+		                if (fromIndex < 0) {
+		                    fromIndex += len;
+		                }
+		                else {
+		                    if (fromIndex >= len) {
+		                        fromIndex = len - 1;
+		                    }
+		                }
+		            }
+		            for (; fromIndex > -1; fromIndex--) {
+		                if (fromIndex in this && this[fromIndex] === searchElement) {
+		                    return fromIndex;
+		                }
+		            }
+		            return -1;
+		        };
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:every
+		        this.every = Ap.every || function(callback, thisObject){
+		            var len = this.length;
+		            if (typeof callback != "function") {
+		                throw new TypeError();
+		            }
+		            for (var i = 0; i < len; i++) {
+		                if (i in this && !callback.call(thisObject, this[i], i, this)) {
+		                    return false;
+		                }
+		            }
+		            return true;
+		        };
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:filter
+		        this.filter = Ap.filter || function(callback, thisObject){
+		            if (typeof callback != "function") {
+		                throw new TypeError();
+		            }
+		            var res = [];
+		            for (var i = 0; i < this.length; i++) {
+		                if (i in this) {
+		                    var val = this[i]; // in case callback mutates this
+		                    if (callback.call(thisObject, val, i, this)) {
+		                        res.push(val);
+		                    }
+		                }
+		            }
+		            return res;
+		        };
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:forEach
+		        this.forEach = Ap.forEach || function(callback, thisObject){
+		            var len = this.length;
+		            if (typeof callback != "function") {
+		                throw new TypeError();
+		            }
+		            for (var i = 0; i < len; i++) {
+		                if (i in this) {
+		                    callback.call(thisObject, this[i], i, this);
+		                }
+		            }
+		        };
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:map
+		        this.map = Ap.map || function(callback, thisObject){
+		            var len = this.length;
+		            if (typeof callback != "function") {
+		                throw new TypeError();
+		            }
+		            var res = [];
+		            for (var i = 0; i < this.length; i++) {
+		                if (i in this) {
+		                    res[i] = callback.call(thisObject, this[i], i, this);
+		                }
+		            }
+		            return res;
+		        };
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:some
+		        this.some = Ap.some || function(callback, thisObject){
+		            var len = this.length;
+		            if (typeof callback != "function") {
+		                throw new TypeError();
+		            }
+		            for (var i = 0; i < len; i++) {
+		                if (i in this &&
+		                callback.call(thisObject, this[i], i, this)) {
+		                    return true;
+		                }
+		            }
+		            return false;
+		        };
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:reduce
+		        this.reduce = Ap.reduce || function(callback, initialValue){
+		            var len = this.length;
+		            if (typeof callback != "function") {
+		                throw new TypeError();
+		            }
+		            // no value to return if no initial value and an empty array
+		            if (len === 0 && arguments.length == 1) {
+		                throw new TypeError();
+		            }
+		            var i = 0;
+		            if (arguments.length >= 2) {
+		                var rv = arguments[1];
+		            }
+		            else {
+		                do {
+		                    if (i in this) {
+		                        rv = this[i++];
+		                        break;
+		                    }
+		                    // if array contains no values, no initial value to return
+		                    if (++i >= len) {
+		                        throw new TypeError();
+		                    }
+		                }
+		                while (true);
+		                            }
+		            
+		            for (; i < len; i++) {
+		                if (i in this) {
+		                    rv = callback.call(null, rv, this[i], i, this);
+		                }
+		            }
+		            return rv;
+		        };
+			    //http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Reference:Objects:Array:reduceRight
+		        this .reduceRight = Ap.reduceRight || function(callback, initialValue){
+		            var len = this.length;
+		            if (typeof callback != "function") {
+		                throw new TypeError();
+		            }
+		            // no value to return if no initial value, empty array
+		            if (len === 0 && arguments.length == 1) {
+		                throw new TypeError();
+		            }
+		            var i = len - 1;
+		            if (arguments.length >= 2) {
+		                var rv = arguments[1];
+		            }
+		            else {
+		                do {
+		                    if (i in this) {
+		                        rv = this[i--];
+		                        break;
+		                    }
+		                    
+		                    // if array contains no values, no initial value to return
+		                    if (--i < 0) {
+		                        throw new TypeError();
+		                    }
+		                }
+		                while (true);
+		                            }
+		            
+		            for (; i >= 0; i--) {
+		                if (i in this) {
+		                    rv = callback.call(null, rv, this[i], i, this);
+		                }
+		            }
+		            return rv;
+		        };
+		        /**
+		         * Calls a function on all elements of the Array
+		         * @alias Array.prototype.invoke
+		         * @param {String} functionName the name of the function to call on all elements
+		         * @param {Array} [args] Optional arguments to pass
+		         */
+		        this.invoke = Ap.invoke || function(functionName, args){
+					var result=[];
+		            this.forEach(function(element, index, array){
+		                var func = element[functionName];
+		                if (typeof(func) == "function") {
+		                    result.push(func.apply(element, args));
+		                }
+		            });
+					return result;
+		        };
+				/**
+				 * Checks if this array has this some element that is equals to the passed one
+				 * @param {Object} object
+				 */
+				this.include = Ap.include || function(object){
+					return this.indexOf(object) != -1;
+				};
+			    
+		        this.max = Ap.max || function(callback, thisObject){
+		            var result=null;
+		            this.forEach(function(value, index, array){
+		                if (typeof callback == "function") {
+		                    value = callback.call(thisObject, value, index, array);
+		                }
+		                if (result === null || value >= result) {
+		                    result = value;
+		                }
+		            });
+					return result;
+		        };
+		        this.min = Ap.min || function(callback, thisObject){
+		            var result=null;
+		            this.forEach(function(value, index, array){
+		                if (typeof callback == "function") {
+		                    value = callback.call(thisObject, value, index, array);
+		                }
+		                if (result === null || value <= result) {
+		                    result = value;
+		                }
+		            });
+					return result;
+		        };
+				this.partition = Ap.partition || function(callback, thisObject ){
+		            if (typeof callback != "function") {
+		                callback =function(r){return r;};
+		            }
+					var result=[[],[]];
+				    this.forEach(function(value, index, array){
+				        result[(!!callback.call(thisObject, value, index, array) ? 0 : 1)].push(value);
+				    });
+				    return result;			
+				};
+				/**
+				 * Get and Set a property on all objects
+				 * @alias Array.prototype.pluck
+				 * @param {String} name
+				 * @param {Object} [value] If specified it will give the value to the pluck
+				 */
+				this.pluck = Ap.pluck || function(name, value){
+					var results = [];
+					var set=(arguments.length==2);
+				    this.forEach(function(object, index, array) {
+						var chunks=name.split(".");
+						for (var i=0;i<(chunks.length-1);i++){
+							object=object[chunks[i]];
+						}
+						results.push(object[chunks[chunks.length-1]]);
+						if (set){
+							object[chunks[chunks.length-1]]=value;
+						}
+				    });		
+					return results;	
+				};
+			
+			    if (!Ap.grep) {
+					/**
+					 * Use RegExp to filter an array
+					 * @param {RegExp, String} filter
+					 * @param {Function} [callback]
+					 * @param {Object} [thisObject]
+					 */
+			        Ap.grep = function(filter, callback, thisObject){
+			            var len = this.length;
+			            if (typeof callback != "function") {
+			                callback =function(r){return r;};
+			            }
+						var results=[];
+						filter=(typeof(filter)=="string")?new RegExp(filter):filter;
+						
+			            for (var i = 0; i < len; i++) {
+							if (filter.match(this[i])){
+								results.push(callback.call(thisObject, this[i], i, this));
+							}
+			            }
+						return results;
+			        };
+			    }
+			};
+			Array.Extend.call(Array.prototype);
+			
+			[1,2,3].forEach(function(v){
+				console.log(v);
+			});
+			/**
+			 * nQuery fn 
+			 * @extends {Array.Extend}
+			 */
+			function nQuery(){
+				this.push.apply(this,arguments);
+			}
+			Array.Extend.call(nQuery.prototype);
+	
+			var q= new nQuery(1,2,3);
+			
+
+			q.forEach(function(v){
+				console.log(v);
+			});
+
+			
+		</script>
+	</head>
+	<body>
+	</body>
+</html>
